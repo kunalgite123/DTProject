@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./vars.css">
+  <link rel="stylesheet" href="./style.css">
+  
+  <style>
+   a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+
+   .action, .logout, .navigation-item, .summary-card {
+       cursor: pointer;
+   }
+   </style>
+  <title>InfraTrace - Verifier Dashboard</title>
+</head>
+<body>
+  <div class="verifier-dashboard">
+    <div class="navigation">
+      <a href="verifier-dashboard.html" class="brand" style="text-decoration: none;">
+        <img class="brand-mark" src="brand-mark0.svg" />
+        <div class="project-identity">
+          <div class="infra-trace">InfraTrace</div>
+          <div class="shadow-infrastructure-mapping-system">
+            Shadow Infrastructure Mapping System
+          </div>
+        </div>
+      </a>
+      <div class="navigation-links">
+        <a href="verifier-dashboard.html" class="navigation-item" style="text-decoration: none;">
+          <div class="pending-records" style="font-weight: 600; color: #3268ad;">Pending Records</div>
+        </a>
+        <a href="dashboard-content.html" class="navigation-item" style="text-decoration: none;">
+          <div class="how-it-works">How It Works</div>
+        </a>
+      </div>
+      <div class="account">
+        <div class="role">
+          <div class="verifier">Verifier</div>
+        </div>
+        <a href="login.html" class="logout">Logout</a>
+      </div>
+    </div>
+    <div class="verification-content">
+      <div class="page-heading">
+        <div class="verification-dashboard">Verification Dashboard</div>
+      </div>
+      <div class="verification-summary">
+        <div class="summary-card">
+          <div class="label-and-icon">
+            <div class="pending">Pending</div>
+            <img class="clock" src="clock0.svg" />
+          </div>
+          <div class="_3">3</div>
+          <div class="waiting-for-verification">Waiting for verification</div>
+        </div>
+        <div class="summary-card">
+          <div class="label-and-icon">
+            <div class="verified">Verified</div>
+            <img class="badge-check" src="badge-check0.svg" />
+          </div>
+          <div class="_8">8</div>
+          <div class="already-reviewed">Already reviewed</div>
+        </div>
+        <div class="summary-card">
+          <div class="label-and-icon">
+            <div class="needs-correction">Needs Correction</div>
+            <img class="circle-alert" src="circle-alert0.svg" />
+          </div>
+          <div class="_1">1</div>
+          <div class="needs-update">Needs update</div>
+        </div>
+      </div>
+      <div class="verification-queue">
+        <div class="table-heading">
+          <div class="records-waiting-for-verification">
+            Records waiting for verification
+          </div>
+          <div class="_3-pending-records">3 pending records</div>
+        </div>
+        <div class="table-filters">
+          <div class="search">
+            <img class="search2" src="search1.svg" />
+            <div class="search-by-utility-id-type-or-location">
+              Search by utility ID, type or location
+            </div>
+          </div>
+        </div>
+        <div class="column-headings">
+          <div class="utility-id">Utility ID</div>
+          <div class="type">Type</div>
+          <div class="location">Location</div>
+          <div class="depth">Depth</div>
+          <div class="source">Source</div>
+          <div class="submitted-by">Submitted By</div>
+          <div class="status">Status</div>
+          <div class="review">Review</div>
+        </div>
+        <div class="utility-record">
+          <div class="gas-001">GAS-001</div>
+          <div class="utility-type">
+            <div class="type-marker"></div>
+            <div class="gas">Gas</div>
+          </div>
+          <div class="midc-nashik">MIDC, Nashik</div>
+          <div class="_0-9-m">0.9 m</div>
+          <div class="department-plan">Department plan</div>
+          <div class="a-patel-admin">A. Patel (Admin)</div>
+          <div class="status-cell">
+            <div class="record-status">
+              <div class="indicator"></div>
+              <div class="pending2">Pending</div>
+            </div>
+          </div>
+          <div class="review-action">
+            <a href="verification-details.html" class="action" style="text-decoration: none;">
+              <div class="review2">Review</div>
+            </a>
+          </div>
+        </div>
+        <div class="utility-record2">
+          <div class="ele-003">ELE-003</div>
+          <div class="utility-type">
+            <div class="type-marker2"></div>
+            <div class="electricity">Electricity</div>
+          </div>
+          <div class="midc-nashik">MIDC, Nashik</div>
+          <div class="_0-8-m">0.8 m</div>
+          <div class="field-survey">Field survey</div>
+          <div class="a-patel-admin">A. Patel (Admin)</div>
+          <div class="status-cell">
+            <div class="record-status">
+              <div class="indicator"></div>
+              <div class="pending2">Pending</div>
+            </div>
+          </div>
+          <div class="review-action">
+            <a href="verification-details.html" class="action" style="text-decoration: none;">
+              <div class="review2">Review</div>
+            </a>
+          </div>
+        </div>
+        <div class="utility-record2">
+          <div class="fbr-002">FBR-002</div>
+          <div class="utility-type">
+            <div class="type-marker3"></div>
+            <div class="fiber">Fiber</div>
+          </div>
+          <div class="midc-nashik">MIDC, Nashik</div>
+          <div class="_0-6-m">0.6 m</div>
+          <div class="contractor-plan">Contractor plan</div>
+          <div class="a-patel-admin">A. Patel (Admin)</div>
+          <div class="status-cell">
+            <div class="record-status">
+              <div class="indicator"></div>
+              <div class="pending2">Pending</div>
+            </div>
+          </div>
+          <div class="review-action">
+            <a href="verification-details.html" class="action" style="text-decoration: none;">
+              <div class="review2">Review</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

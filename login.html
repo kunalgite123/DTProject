@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./vars.css">
+  <link rel="stylesheet" href="./style.css">
+  
+  <style>
+   a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+
+   .role-card, .login-button, .forgot-password {
+       cursor: pointer;
+   }
+   </style>
+  <title>InfraTrace - Login</title>
+</head>
+<body>
+  <div class="group-1">
+    <div class="login-page">
+      <div class="brand-header">
+        <a href="login.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+          <div class="brand-mark">
+            <img class="layers" src="layers0.svg" />
+          </div>
+          <div class="project-identity">
+            <div class="project-name">InfraTrace</div>
+            <div class="project-description">
+              Shadow Infrastructure Mapping System
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="login-content">
+        <div class="login">
+          <div class="welcome">
+            <div class="heading">Welcome to InfraTrace</div>
+          </div>
+          <form class="sign-in-form" onsubmit="event.preventDefault(); window.location.href='index.html';">
+            <div class="form-field">
+              <div class="label">Email</div>
+              <div class="input">
+                <input type="email" placeholder="Enter your email" style="width: 100%; height: 100%; font-family: inherit; font-size: 16.8px; color: #172d49; outline: none;" value="admin@infratrace.gov.in" />
+              </div>
+            </div>
+            <div class="form-field">
+              <div class="label">Password</div>
+              <div class="input">
+                <input type="password" placeholder="Enter your password" style="width: 100%; height: 100%; font-family: inherit; font-size: 16.8px; color: #172d49; outline: none;" value="••••••••••••" />
+              </div>
+            </div>
+            <a href="index.html" class="login-button" style="text-decoration: none;">
+              <div class="label2">Login</div>
+            </a>
+            <div class="forgot-password">Forgot Password?</div>
+          </form>
+        </div>
+        <div class="role-selection">
+          <div class="section-divider"></div>
+          <div class="heading2">Select your role</div>
+          <div class="available-roles">
+            <a href="utility-map.html" class="role-card" style="text-decoration: none;">
+              <div class="role-identity">
+                <img class="user-round" src="user-round0.svg" />
+                <div class="role-name">User</div>
+              </div>
+              <div class="description">View verified utilities on the map.</div>
+            </a>
+            <a href="verifier-dashboard.html" class="role-card" style="text-decoration: none;">
+              <div class="role-identity">
+                <img class="badge-check" src="badge-check0.svg" />
+                <div class="role-name">Verifier</div>
+              </div>
+              <div class="description">
+                Review submitted records and approve or request changes.
+              </div>
+            </a>
+            <a href="index.html" class="role-card" style="text-decoration: none;">
+              <div class="role-identity">
+                <img class="settings" src="settings0.svg" />
+                <div class="role-name">Admin</div>
+              </div>
+              <div class="description">
+                Add and update records. Send them for verification.
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

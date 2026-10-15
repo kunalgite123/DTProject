@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./vars.css">
+  <link rel="stylesheet" href="./style.css">
+  
+  <style>
+   a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+
+   .action, .action2, .upload-area, .logout, .navigation-item, .navigation-item2 {
+       cursor: pointer;
+   }
+   </style>
+  <title>InfraTrace - Add Utility Record</title>
+</head>
+<body>
+  <div class="add-utility">
+    <div class="navigation">
+      <a href="index.html" class="brand" style="text-decoration: none;">
+        <img class="brand-mark" src="brand-mark0.svg" />
+        <div class="project-identity">
+          <div class="infra-trace">InfraTrace</div>
+          <div class="shadow-infrastructure-mapping-system">
+            Shadow Infrastructure Mapping System
+          </div>
+        </div>
+      </a>
+      <div class="navigation-links">
+        <a href="index.html" class="navigation-item" style="text-decoration: none;">
+          <div class="utility-records">Utility Records</div>
+        </a>
+        <a href="add-utility.html" class="navigation-item2" style="text-decoration: none;">
+          <div class="add-utility2">Add Utility</div>
+        </a>
+        <a href="dashboard-content.html" class="navigation-item" style="text-decoration: none;">
+          <div class="how-it-works">How It Works</div>
+        </a>
+      </div>
+      <div class="account">
+        <div class="role">
+          <div class="admin">Admin</div>
+        </div>
+        <a href="login.html" class="logout">Logout</a>
+      </div>
+    </div>
+    <div class="add-utility-content">
+      <div class="introduction">
+        <div class="add-utility-record">Add Utility Record</div>
+      </div>
+      <div class="form-and-map-preview">
+        <div class="utility-record-form">
+          <div class="form-introduction">
+            <div class="utility-information">Utility information</div>
+          </div>
+          <div class="field-row">
+            <div class="form-field">
+              <div class="utility-type">Utility Type</div>
+              <div class="input">
+                <select style="width: 100%; height: 100%; font-family: inherit; font-size: 15.6px; color: #172d49; background: transparent; outline: none;">
+                  <option value="water">Water</option>
+                  <option value="gas">Gas</option>
+                  <option value="electricity">Electricity</option>
+                  <option value="fiber">Fiber</option>
+                  <option value="sewer">Sewer</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-field">
+              <div class="utility-id">Utility ID</div>
+              <div class="input">
+                <input type="text" placeholder="Enter a new ID, e.g. WTR-004" style="width: 100%; height: 100%; font-family: inherit; font-size: 15.6px; color: #172d49; outline: none;" />
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="form-field">
+              <div class="location">Location</div>
+              <div class="input">
+                <input type="text" placeholder="Enter street or area" style="width: 100%; height: 100%; font-family: inherit; font-size: 15.6px; color: #172d49; outline: none;" />
+                <img class="map-pin" src="map-pin0.svg" />
+              </div>
+            </div>
+            <div class="form-field">
+              <div class="depth">Depth</div>
+              <div class="input">
+                <input type="text" placeholder="Enter depth in metres, e.g. 1.2" style="width: 100%; height: 100%; font-family: inherit; font-size: 15.6px; color: #172d49; outline: none;" />
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="form-field">
+              <div class="owner-department">Owner/Department</div>
+              <div class="input">
+                <input type="text" placeholder="Enter owner or department" style="width: 100%; height: 100%; font-family: inherit; font-size: 15.6px; color: #172d49; outline: none;" />
+              </div>
+            </div>
+            <div class="form-field">
+              <div class="status">Status</div>
+              <div class="input">
+                <select style="width: 100%; height: 100%; font-family: inherit; font-size: 15.6px; color: #172d49; background: transparent; outline: none;">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="under-maintenance">Under Maintenance</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="form-field">
+              <div class="source">Source</div>
+              <div class="input">
+                <select style="width: 100%; height: 100%; font-family: inherit; font-size: 15.6px; color: #172d49; background: transparent; outline: none;">
+                  <option value="dept-plan">Department plan</option>
+                  <option value="field-survey">Field survey</option>
+                  <option value="contractor-plan">Contractor plan</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-field">
+              <div class="last-verified-date">Last Verified Date</div>
+              <div class="input">
+                <div class="not-verified-yet">Not verified yet</div>
+                <img class="calendar" src="calendar0.svg" />
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="supporting-document">
+            <div class="supporting-document2">Supporting document</div>
+            <div class="upload-area">
+              <img class="upload" src="upload0.svg" />
+              <div class="upload-instructions">
+                <div class="attach-a-survey-plan-or-department-record">
+                  Attach a survey, plan or department record
+                </div>
+              </div>
+              <div class="action">
+                <div class="upload-document">Upload Document</div>
+              </div>
+            </div>
+          </div>
+          <div class="verification-note">
+            <div class="next-step">Next step</div>
+            <div
+              class="a-verifier-checks-your-record-it-appears-on-the-user-map-only-after-approval"
+            >
+              A Verifier checks your record. It appears on the user map only after
+              approval.
+            </div>
+          </div>
+        </div>
+        <div class="location-preview">
+          <div class="map-preview">
+            <div class="map-heading">
+              <div class="map-preview2">Map preview</div>
+              <img class="map" src="map0.svg" />
+            </div>
+            <div class="westbrook-demo-map">
+              <div class="park"></div>
+              <img class="river" src="river0.svg" />
+              <div class="building"></div>
+              <div class="building2"></div>
+              <div class="building3"></div>
+              <div class="building4"></div>
+              <div class="building5"></div>
+              <div class="building6"></div>
+              <div class="building7"></div>
+              <div class="building8"></div>
+              <div class="building9"></div>
+              <div class="building10"></div>
+              <div class="building11"></div>
+              <div class="building12"></div>
+              <div class="building13"></div>
+              <div class="building14"></div>
+              <div class="building15"></div>
+              <div class="building16"></div>
+              <div class="road"></div>
+              <div class="road2"></div>
+              <div class="road3"></div>
+              <div class="road4"></div>
+              <div class="road5"></div>
+              <div class="road6"></div>
+              <div class="road7"></div>
+              <img class="diagonal-road" src="diagonal-road0.svg" />
+              <div class="water-line"></div>
+              <img class="gas-line" src="gas-line0.svg" />
+              <img class="electricity-line" src="electricity-line0.svg" />
+              <img class="fiber-line" src="fiber-line0.svg" />
+              <img class="sewer-line" src="sewer-line0.svg" />
+              <div class="main-road">MAIN ROAD</div>
+              <div class="industrial-road">INDUSTRIAL ROAD</div>
+              <div class="service-road">SERVICE ROAD</div>
+              <div class="open-space">Open space</div>
+              <div class="midc">MIDC</div>
+              <div class="ellipse"></div>
+              <div class="ellipse2"></div>
+              <div class="frame">
+                <div class="new-location">New location</div>
+              </div>
+              <div class="frame2">
+                <div class="midc-nashik">MIDC, Nashik</div>
+              </div>
+              <div class="frame3">
+                <div class="frame4">
+                  <div class="div">+</div>
+                </div>
+                <div class="frame4">
+                  <div class="div">−</div>
+                </div>
+              </div>
+            </div>
+            <div class="map-instructions">
+              <div class="choose-a-location">Choose a location</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <div class="actions">
+          <a href="index.html" class="action2" style="text-decoration: none;">
+            <img class="send" src="send0.svg" />
+            <div class="send-for-verification">Send for Verification</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

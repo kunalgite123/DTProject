@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./vars.css">
+  <link rel="stylesheet" href="./style.css">
+  
+  <style>
+   a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+
+   .navigation-item, .navigation-item2, .logout, .utility-layer, .zoom-action {
+       cursor: pointer;
+   }
+   </style>
+  <title>InfraTrace - Utility Map</title>
+</head>
+<body>
+  <div class="utility-map">
+    <div class="navigation">
+      <a href="utility-map.html" class="brand" style="text-decoration: none;">
+        <img class="brand-mark" src="brand-mark0.svg" />
+        <div class="project-identity">
+          <div class="infra-trace">InfraTrace</div>
+          <div class="shadow-infrastructure-mapping-system">
+            Shadow Infrastructure Mapping System
+          </div>
+        </div>
+      </a>
+      <div class="navigation-links">
+        <a href="dashboard-content.html" class="navigation-item" style="text-decoration: none;">
+          <div class="dashboard">Dashboard</div>
+        </a>
+        <a href="utility-map.html" class="navigation-item2" style="text-decoration: none;">
+          <div class="utility-map2">Utility Map</div>
+        </a>
+        <a href="dashboard-content.html" class="navigation-item" style="text-decoration: none;">
+          <div class="how-it-works">How It Works</div>
+        </a>
+      </div>
+      <div class="account">
+        <div class="role">
+          <div class="user">User</div>
+        </div>
+        <a href="login.html" class="logout">Logout</a>
+      </div>
+    </div>
+    <div class="map-content">
+      <div class="page-heading">
+        <div class="utility-map3">Utility Map</div>
+      </div>
+      <div class="map-toolbar">
+        <div class="search-utility">
+          <img class="search" src="search0.svg" />
+          <input type="text" placeholder="Search utility ID or location" style="width: 100%; height: 100%; font-family: inherit; font-size: 16.8px; color: #172d49; border: none; outline: none; background: transparent;" />
+        </div>
+      </div>
+      <div class="map-workspace">
+        <div class="utility-layers">
+          <div class="heading">
+            <div class="utility-layers2">Utility layers</div>
+            <div class="choose-which-verified-utilities-to-show-on-the-map">
+              Choose which verified utilities to show on the map.
+            </div>
+          </div>
+          <div class="layers">
+            <div class="utility-layer">
+              <div class="checked-layer">
+                <div class="div">✓</div>
+              </div>
+              <div class="color-key"></div>
+              <div class="water">Water</div>
+            </div>
+            <div class="utility-layer">
+              <div class="checked-layer">
+                <div class="div">✓</div>
+              </div>
+              <div class="color-key2"></div>
+              <div class="gas">Gas</div>
+            </div>
+            <div class="utility-layer">
+              <div class="checked-layer">
+                <div class="div">✓</div>
+              </div>
+              <div class="color-key3"></div>
+              <div class="electricity">Electricity</div>
+            </div>
+            <div class="utility-layer">
+              <div class="checked-layer">
+                <div class="div">✓</div>
+              </div>
+              <div class="color-key4"></div>
+              <div class="fiber">Fiber</div>
+            </div>
+            <div class="utility-layer">
+              <div class="checked-layer">
+                <div class="div">✓</div>
+              </div>
+              <div class="color-key5"></div>
+              <div class="sewer">Sewer</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+        </div>
+        <div class="utility-map4">
+          <div class="westbrook-demo-map">
+            <div class="park"></div>
+            <img class="river" src="river0.svg" />
+            <div class="building"></div>
+            <div class="building2"></div>
+            <div class="building3"></div>
+            <div class="building4"></div>
+            <div class="building5"></div>
+            <div class="building6"></div>
+            <div class="building7"></div>
+            <div class="building8"></div>
+            <div class="building9"></div>
+            <div class="building10"></div>
+            <div class="building11"></div>
+            <div class="building12"></div>
+            <div class="building13"></div>
+            <div class="building14"></div>
+            <div class="building15"></div>
+            <div class="building16"></div>
+            <div class="road"></div>
+            <div class="road2"></div>
+            <div class="road3"></div>
+            <div class="road4"></div>
+            <div class="road5"></div>
+            <div class="road6"></div>
+            <div class="road7"></div>
+            <img class="diagonal-road" src="diagonal-road0.svg" />
+            <div class="water-line"></div>
+            <img class="utility-line" src="utility-line0.svg" />
+            <img class="utility-line2" src="utility-line1.svg" />
+            <img class="utility-line3" src="utility-line2.svg" />
+            <img class="utility-line4" src="utility-line3.svg" />
+            <div class="utility-marker"></div>
+            <div class="utility-marker2"></div>
+            <div class="utility-marker3"></div>
+            <div class="utility-marker4"></div>
+            <div class="utility-marker5"></div>
+            <div class="utility-marker6"></div>
+            <div class="utility-marker7"></div>
+            <div class="utility-marker8"></div>
+            <div class="utility-marker9"></div>
+            <div class="utility-marker10"></div>
+            <div class="utility-marker11"></div>
+            <div class="utility-marker12"></div>
+            <div class="main-road">MAIN ROAD</div>
+            <div class="industrial-road">INDUSTRIAL ROAD</div>
+            <div class="service-road">SERVICE ROAD</div>
+            <div class="open-space">Open space</div>
+            <div class="midc-office">MIDC office</div>
+            <div class="midc">MIDC</div>
+            <div class="selection-halo"></div>
+            <div class="selected-marker"></div>
+            <div class="selected-utility-label">
+              <div class="wtr-001-water">WTR-001 · Water</div>
+            </div>
+            <div class="map-area">
+              <div class="midc-nashik">MIDC, Nashik</div>
+            </div>
+            <div class="zoom-controls">
+              <div class="zoom-action">
+                <div class="div2">+</div>
+              </div>
+              <div class="zoom-action">
+                <div class="div2">−</div>
+              </div>
+            </div>
+            <div class="map-note"></div>
+          </div>
+        </div>
+        <div class="selected-record">
+          <div class="utility-details">
+            <div class="panel-heading">
+              <div class="utility-details2">Utility Details</div>
+            </div>
+            <div class="utility-identity">
+              <div class="midc-water-main">MIDC water main</div>
+              <div class="record-status">
+                <div class="indicator"></div>
+                <div class="verified">Verified</div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="record-information">
+              <div class="detail">
+                <div class="utility-id">Utility ID</div>
+                <div class="wtr-001">WTR-001</div>
+              </div>
+              <div class="detail">
+                <div class="type">Type</div>
+                <div class="water2">Water</div>
+              </div>
+              <div class="detail">
+                <div class="location">Location</div>
+                <div class="midc-nashik2">MIDC, Nashik</div>
+              </div>
+              <div class="detail">
+                <div class="depth">Depth</div>
+                <div class="_1-2-m">1.2 m</div>
+              </div>
+              <div class="detail">
+                <div class="last-updated">Last updated</div>
+                <div class="_04-oct-2026">04 Oct 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
