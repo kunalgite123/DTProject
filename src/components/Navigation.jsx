@@ -17,10 +17,9 @@ export const Navigation = () => {
     <div className="navigation">
       <Link to="/" className="brand" style={{ textDecoration: 'none' }}>
         <div className="brand-mark" style={{ background: '#f2f6fc', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '38px', height: '38px', borderRadius: '8px' }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3268ad" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-            <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 12 17 22 12"></polyline>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3268ad" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+            <circle cx="12" cy="10" r="3" fill="#3268ad"></circle>
           </svg>
         </div>
         <div className="project-identity">

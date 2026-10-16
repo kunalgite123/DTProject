@@ -6,12 +6,12 @@ export const LoginPage = () => {
   const { currentUser, currentRole, initialLoading, signInWithSupabase, signUpWithSupabase, loading } = useUtilities();
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState('admin@infratrace.com');
-  const [password, setPassword] = useState('Admin@123456');
+  const [email, setEmail] = useState('user@infratrace.com');
+  const [password, setPassword] = useState('User@123456');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [fullName, setFullName] = useState('Anil Patel');
+  const [fullName, setFullName] = useState('Ramesh Deshmukh');
   const [profession, setProfession] = useState('Civil Engineer');
-  const [selectedRole, setSelectedRole] = useState('Admin');
+  const [selectedRole, setSelectedRole] = useState('User');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -119,10 +119,10 @@ export const LoginPage = () => {
       setFullName('');
       setProfession('Civil Engineer');
     } else {
-      setEmail('admin@infratrace.com');
-      setPassword('Admin@123456');
-      setFullName('Anil Patel');
-      setSelectedRole('Admin');
+      setEmail('user@infratrace.com');
+      setPassword('User@123456');
+      setFullName('Ramesh Deshmukh');
+      setSelectedRole('User');
     }
   };
 
@@ -133,9 +133,8 @@ export const LoginPage = () => {
         <div className="brand-header">
           <div className="brand-mark" style={{ background: '#f2f6fc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3268ad" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-              <polyline points="2 17 12 22 22 17"></polyline>
-              <polyline points="2 12 12 17 22 12"></polyline>
+              <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+              <circle cx="12" cy="10" r="3" fill="#3268ad"></circle>
             </svg>
           </div>
           <div className="project-identity">
@@ -147,13 +146,14 @@ export const LoginPage = () => {
           <div className="login">
             <div className="welcome">
               <div className="heading" style={{ fontWeight: 700 }}>
-                {isSignUp ? 'Create User Account' : 'Welcome to InfraTrace'}
-              </div>
-              <p style={{ color: '#66758a', fontSize: '14px', marginTop: '6px' }}>
                 {isSignUp
-                  ? 'Sign up as a field engineer, contractor or surveyor'
-                  : 'Sign in with your email and password'}
-              </p>
+                  ? 'Create User Account'
+                  : selectedRole === 'Admin'
+                  ? 'Admin Login'
+                  : selectedRole === 'Verifier'
+                  ? 'Verifier Login'
+                  : 'User Login'}
+              </div>
             </div>
 
             {authError && (

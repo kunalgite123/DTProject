@@ -90,7 +90,47 @@ export async function detectUserRoleAndProfile(user) {
   const metaName = user.user_metadata?.full_name || email.split('@')[0] || 'User';
 
   try {
-    // 0. Optional check via get_my_role RPC function if defined
+    const cleanEmail = (user.email || '').toLowerCase().trim();
+
+    // 0. Guaranteed mapping for default system accounts
+    if (cleanEmail === 'admin@infratrace.com') {
+      return {
+        role: 'Admin',
+        profile: {
+          id: user.id,
+          fullName: 'Anil Patel',
+          email: cleanEmail,
+          role: 'Admin',
+          department: 'Infrastructure Management'
+        }
+      };
+    }
+    if (cleanEmail === 'verifier@infratrace.com') {
+      return {
+        role: 'Verifier',
+        profile: {
+          id: user.id,
+          fullName: 'Suresh Sharma',
+          email: cleanEmail,
+          role: 'Verifier',
+          department: 'Inspection & Verification'
+        }
+      };
+    }
+    if (cleanEmail === 'user@infratrace.com') {
+      return {
+        role: 'User',
+        profile: {
+          id: user.id,
+          fullName: 'Ramesh Deshmukh',
+          email: cleanEmail,
+          role: 'User',
+          profession: 'Civil Engineer'
+        }
+      };
+    }
+
+    // 0.1 Optional check via get_my_role RPC function if defined
     try {
       const { data: rpcRole, error: rpcErr } = await supabase.rpc('get_my_role');
       if (rpcRole && !rpcErr && typeof rpcRole === 'string') {
@@ -276,9 +316,29 @@ export async function signIn({ email, password, selectedRole }) {
     // Detect role from database tables
     const { role: detectedRole, profile, isAutoCreated } = await detectUserRoleAndProfile(data.user);
 
-    let infoMessage = null;
+    // STRICT ROLE ENFORCEMENT:
+    // User credentials must only work on User portal; Verifier on Verifier; Admin on Admin.
     if (selectedRole && selectedRole !== detectedRole) {
-      infoMessage = `Logged in as ${detectedRole}.`;
+      // Immediately sign out to clear session from browser and memory
+      try {
+        await supabase.auth.signOut();
+      } catch {
+        // ignore sign out errors
+      }
+
+      const roleLabels = {
+        Admin: 'Admin Officer',
+        Verifier: 'Verifier Officer',
+        User: 'Civil Engineer (User)'
+      };
+
+      const selectedName = roleLabels[selectedRole] || selectedRole;
+      const actualName = roleLabels[detectedRole] || detectedRole;
+
+      return {
+        success: false,
+        error: `Access Denied: This account is registered as a ${actualName}. You cannot log into the ${selectedName} portal with these credentials. Please switch to the ${actualName} portal.`
+      };
     }
 
     return {
@@ -287,7 +347,6 @@ export async function signIn({ email, password, selectedRole }) {
       session: data.session,
       role: detectedRole,
       profile: profile,
-      infoMessage: infoMessage,
       isAutoCreated: isAutoCreated
     };
   } catch (err) {
