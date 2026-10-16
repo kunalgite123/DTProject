@@ -1,0 +1,172 @@
+{
+    "type": "FeatureCollection",
+    "name": "Nashik MIDC Simulated Demo Utilities",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "id": "DEMO-W-001",
+                "utility": "Water",
+                "status": "Simulated Demo Data"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        73.7500,
+                        19.9900
+                    ],
+                    [
+                        73.7520,
+                        19.9910
+                    ],
+                    [
+                        73.7540,
+                        19.9905
+                    ],
+                    [
+                        73.7560,
+                        19.9920
+                    ],
+                    [
+                        73.7580,
+                        19.9915
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "id": "DEMO-W-002",
+                "utility": "Water",
+                "status": "Simulated Demo Data"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        73.7540,
+                        19.9905
+                    ],
+                    [
+                        73.7545,
+                        19.9930
+                    ],
+                    [
+                        73.7560,
+                        19.9940
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "id": "DEMO-G-001",
+                "utility": "Gas",
+                "status": "Simulated Demo Data"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        73.7510,
+                        19.9885
+                    ],
+                    [
+                        73.7530,
+                        19.9895
+                    ],
+                    [
+                        73.7550,
+                        19.9890
+                    ],
+                    [
+                        73.7570,
+                        19.9900
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "id": "DEMO-G-002",
+                "utility": "Gas",
+                "status": "Simulated Demo Data"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        73.7550,
+                        19.9890
+                    ],
+                    [
+                        73.7555,
+                        19.9910
+                    ],
+                    [
+                        73.7570,
+                        19.9920
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "id": "DEMO-E-001",
+                "utility": "Electricity",
+                "status": "Simulated Demo Data"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        73.7505,
+                        19.9920
+                    ],
+                    [
+                        73.7525,
+                        19.9930
+                    ],
+                    [
+                        73.7545,
+                        19.9925
+                    ],
+                    [
+                        73.7570,
+                        19.9940
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "id": "DEMO-E-002",
+                "utility": "Electricity",
+                "status": "Simulated Demo Data"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        73.7545,
+                        19.9925
+                    ],
+                    [
+                        73.7550,
+                        19.9950
+                    ],
+                    [
+                        73.7570,
+                        19.9955
+                    ]
+                ]
+            }
+        }
+    ]
+}
