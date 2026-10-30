@@ -19,10 +19,17 @@ const supabaseAnonKey =
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
   (typeof process !== 'undefined' && (process.env?.VITE_SUPABASE_ANON_KEY || process.env?.SUPABASE_ANON_KEY));
 
-if (!supabaseUrl || !supabaseAnonKey) {
+export const isSupabaseConfigured = Boolean(
+  supabaseUrl &&
+  supabaseAnonKey &&
+  !supabaseUrl.includes('placeholder.supabase.co') &&
+  !supabaseUrl.includes('your-project-ref')
+);
+
+if (!isSupabaseConfigured) {
   console.error(
     '[InfraTrace] Missing Supabase environment variables! ' +
-    'Please verify that VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are properly defined in your .env file.'
+    'Please verify that VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are properly defined in your .env or deployment settings.'
   );
 }
 

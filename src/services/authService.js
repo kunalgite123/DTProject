@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient.js';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js';
 
 /**
  * Maps raw Supabase authentication errors to user-friendly messages.
@@ -63,7 +63,10 @@ export function mapAuthError(error) {
     message.includes('network') ||
     message.includes('timeout')
   ) {
-    return 'Network error, try again';
+    if (!isSupabaseConfigured) {
+      return 'Missing Supabase credentials: Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your hosting platform settings and redeploy.';
+    }
+    return 'Unable to connect to Supabase: Please ensure your internet is connected and your Supabase project is active (not paused).';
   }
 
   return error.message || 'Authentication failed. Please try again.';
@@ -291,6 +294,12 @@ export async function detectUserRoleAndProfile(user) {
  * Never signs the user out because of a missing or mismatching role.
  */
 export async function signIn({ email, password, selectedRole }) {
+  if (!isSupabaseConfigured) {
+    return {
+      success: false,
+      error: 'Supabase is not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your deployment environment variables and redeploy.'
+    };
+  }
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
@@ -353,7 +362,7 @@ export async function signIn({ email, password, selectedRole }) {
     console.error('[InfraTrace Auth] Unexpected sign-in error:', err);
     return {
       success: false,
-      error: 'Network error, try again'
+      error: mapAuthError(err)
     };
   }
 }
@@ -365,6 +374,12 @@ export async function signIn({ email, password, selectedRole }) {
  * If email confirmation is enabled, instructions to confirm email are returned.
  */
 export async function signUp({ email, password, fullName, profession = 'Civil Engineer' }) {
+  if (!isSupabaseConfigured) {
+    return {
+      success: false,
+      error: 'Supabase is not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your deployment environment variables and redeploy.'
+    };
+  }
   try {
     const validProfessions = ['Civil Engineer', 'Site Engineer', 'Contractor', 'Surveyor'];
     const resolvedProfession = validProfessions.includes(profession) ? profession : 'Civil Engineer';
@@ -434,7 +449,7 @@ export async function signUp({ email, password, fullName, profession = 'Civil En
     console.error('[InfraTrace Auth] Sign-up exception:', err);
     return {
       success: false,
-      error: 'Network error or unexpected registration failure.'
+      error: mapAuthError(err)
     };
   }
 }
