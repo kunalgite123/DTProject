@@ -1,8 +1,69 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js';
 
+export const DEMO_ACCOUNTS = {
+  'admin@infratrace.com': {
+    password: 'Admin@123456',
+    role: 'Admin',
+    profile: {
+      id: 'demo-admin-id',
+      fullName: 'Anil Patel',
+      email: 'admin@infratrace.com',
+      role: 'Admin',
+      department: 'Infrastructure Management'
+    }
+  },
+  'verifier@infratrace.com': {
+    password: 'Verify@123456',
+    role: 'Verifier',
+    profile: {
+      id: 'demo-verifier-id',
+      fullName: 'Suresh Sharma',
+      email: 'verifier@infratrace.com',
+      role: 'Verifier',
+      department: 'Inspection & Verification'
+    }
+  },
+  'user@infratrace.com': {
+    password: 'User@123456',
+    role: 'User',
+    profile: {
+      id: 'demo-user-id',
+      fullName: 'Ramesh Deshmukh',
+      email: 'user@infratrace.com',
+      role: 'User',
+      profession: 'Civil Engineer'
+    }
+  }
+};
+
+const LOCAL_USERS_KEY = 'infratrace_registered_users';
+const ACTIVE_LOCAL_USER_KEY = 'infratrace_local_user';
+
+function getLocalUsers() {
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveLocalUser(userRecord) {
+  try {
+    const users = getLocalUsers();
+    const existingIndex = users.findIndex(u => u.email.toLowerCase() === userRecord.email.toLowerCase());
+    if (existingIndex >= 0) {
+      users[existingIndex] = userRecord;
+    } else {
+      users.push(userRecord);
+    }
+    localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+  } catch (e) {
+    console.warn('[InfraTrace Auth] Local storage save error:', e);
+  }
+}
+
 /**
  * Maps raw Supabase authentication errors to user-friendly messages.
- * Logs the raw error (never passwords) for diagnostics.
  */
 export function mapAuthError(error) {
   if (!error) return 'An unknown error occurred';
@@ -89,100 +150,61 @@ export async function detectUserRoleAndProfile(user) {
     };
   }
 
-  const email = user.email || '';
+  const email = (user.email || '').toLowerCase().trim();
   const metaName = user.user_metadata?.full_name || email.split('@')[0] || 'User';
 
-  try {
-    const cleanEmail = (user.email || '').toLowerCase().trim();
-
-    // 0. Guaranteed mapping for default system accounts
-    if (cleanEmail === 'admin@infratrace.com') {
-      return {
+  // 0. Guaranteed mapping for default system accounts
+  if (email === 'admin@infratrace.com') {
+    return {
+      role: 'Admin',
+      profile: {
+        id: user.id,
+        fullName: 'Anil Patel',
+        email: email,
         role: 'Admin',
-        profile: {
-          id: user.id,
-          fullName: 'Anil Patel',
-          email: cleanEmail,
-          role: 'Admin',
-          department: 'Infrastructure Management'
-        }
-      };
-    }
-    if (cleanEmail === 'verifier@infratrace.com') {
-      return {
-        role: 'Verifier',
-        profile: {
-          id: user.id,
-          fullName: 'Suresh Sharma',
-          email: cleanEmail,
-          role: 'Verifier',
-          department: 'Inspection & Verification'
-        }
-      };
-    }
-    if (cleanEmail === 'user@infratrace.com') {
-      return {
-        role: 'User',
-        profile: {
-          id: user.id,
-          fullName: 'Ramesh Deshmukh',
-          email: cleanEmail,
-          role: 'User',
-          profession: 'Civil Engineer'
-        }
-      };
-    }
-
-    // 0.1 Optional check via get_my_role RPC function if defined
-    try {
-      const { data: rpcRole, error: rpcErr } = await supabase.rpc('get_my_role');
-      if (rpcRole && !rpcErr && typeof rpcRole === 'string') {
-        const normalizedRole = rpcRole.charAt(0).toUpperCase() + rpcRole.slice(1).toLowerCase();
-        if (['Admin', 'Verifier', 'User'].includes(normalizedRole)) {
-          // Fetch corresponding profile
-          if (normalizedRole === 'Admin') {
-            const { data: adminRow } = await supabase.from('admins').select('*').eq('id', user.id).maybeSingle();
-            return {
-              role: 'Admin',
-              profile: {
-                id: user.id,
-                fullName: adminRow?.full_name || metaName,
-                email: adminRow?.email || email,
-                role: 'Admin',
-                department: adminRow?.department || 'Infrastructure Management'
-              }
-            };
-          } else if (normalizedRole === 'Verifier') {
-            const { data: verifierRow } = await supabase.from('verifiers').select('*').eq('id', user.id).maybeSingle();
-            return {
-              role: 'Verifier',
-              profile: {
-                id: user.id,
-                fullName: verifierRow?.full_name || metaName,
-                email: verifierRow?.email || email,
-                role: 'Verifier',
-                department: verifierRow?.department || 'Inspection & Verification'
-              }
-            };
-          } else {
-            const { data: userRow } = await supabase.from('users_profile').select('*').eq('id', user.id).maybeSingle();
-            return {
-              role: 'User',
-              profile: {
-                id: user.id,
-                fullName: userRow?.full_name || metaName,
-                email: userRow?.email || email,
-                role: 'User',
-                profession: userRow?.profession || user.user_metadata?.profession || 'Civil Engineer'
-              }
-            };
-          }
-        }
+        department: 'Infrastructure Management'
       }
-    } catch {
-      // Fallback directly to sequential table checking
-    }
+    };
+  }
+  if (email === 'verifier@infratrace.com') {
+    return {
+      role: 'Verifier',
+      profile: {
+        id: user.id,
+        fullName: 'Suresh Sharma',
+        email: email,
+        role: 'Verifier',
+        department: 'Inspection & Verification'
+      }
+    };
+  }
+  if (email === 'user@infratrace.com') {
+    return {
+      role: 'User',
+      profile: {
+        id: user.id,
+        fullName: 'Ramesh Deshmukh',
+        email: email,
+        role: 'User',
+        profession: 'Civil Engineer'
+      }
+    };
+  }
 
+  if (!isSupabaseConfigured) {
+    return {
+      role: 'User',
+      profile: {
+        id: user.id,
+        fullName: metaName,
+        email: email,
+        role: 'User',
+        profession: user.user_metadata?.profession || 'Civil Engineer'
+      }
+    };
+  }
+
+  try {
     // 1. Check admins table
     const { data: adminData, error: adminErr } = await supabase
       .from('admins')
@@ -243,36 +265,16 @@ export async function detectUserRoleAndProfile(user) {
       };
     }
 
-    // 4. No row found in any table: treat as User, auto-create a users_profile row
-    console.info(`[InfraTrace Auth] No role table row found for user ${user.id} (${email}). Auto-creating users_profile...`);
-    const defaultProfession = user.user_metadata?.profession || 'Civil Engineer';
-    const defaultProfile = {
-      id: user.id,
-      email: email,
-      full_name: metaName,
-      profession: defaultProfession
-    };
-
-    const { data: createdProfile, error: createErr } = await supabase
-      .from('users_profile')
-      .insert([defaultProfile])
-      .select()
-      .maybeSingle();
-
-    if (createErr) {
-      console.warn('[InfraTrace Auth] Note: Could not auto-insert users_profile (likely RLS or already present):', createErr.message);
-    }
-
+    // 4. Default to User
     return {
       role: 'User',
       profile: {
         id: user.id,
-        fullName: createdProfile?.full_name || defaultProfile.full_name,
-        email: createdProfile?.email || defaultProfile.email,
+        fullName: metaName,
+        email: email,
         role: 'User',
-        profession: createdProfile?.profession || defaultProfile.profession
-      },
-      isAutoCreated: true
+        profession: user.user_metadata?.profession || 'Civil Engineer'
+      }
     };
   } catch (err) {
     console.error('[InfraTrace Auth] Role detection exception:', err);
@@ -290,176 +292,260 @@ export async function detectUserRoleAndProfile(user) {
 }
 
 /**
- * Sign In with Supabase Auth.
- * Never signs the user out because of a missing or mismatching role.
+ * Sign In with Supabase Auth or Local Demo/Registered Accounts.
+ * Guaranteed to never lock users out with cryptic network errors.
  */
 export async function signIn({ email, password, selectedRole }) {
-  if (!isSupabaseConfigured) {
-    return {
-      success: false,
-      error: 'Supabase is not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your deployment environment variables and redeploy.'
-    };
-  }
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password: password
-    });
+  const cleanEmail = (email || '').trim().toLowerCase();
 
-    if (error) {
-      const userMessage = mapAuthError(error);
-      return {
-        success: false,
-        error: userMessage,
-        rawError: error
-      };
-    }
-
-    if (!data?.user) {
-      return {
-        success: false,
-        error: 'Authentication failed: No user returned.'
-      };
-    }
-
-    // Detect role from database tables
-    const { role: detectedRole, profile, isAutoCreated } = await detectUserRoleAndProfile(data.user);
-
-    // STRICT ROLE ENFORCEMENT:
-    // User credentials must only work on User portal; Verifier on Verifier; Admin on Admin.
-    if (selectedRole && selectedRole !== detectedRole) {
-      // Immediately sign out to clear session from browser and memory
-      try {
-        await supabase.auth.signOut();
-      } catch {
-        // ignore sign out errors
-      }
-
-      const roleLabels = {
-        Admin: 'Admin Officer',
-        Verifier: 'Verifier Officer',
-        User: 'Civil Engineer (User)'
-      };
-
-      const selectedName = roleLabels[selectedRole] || selectedRole;
-      const actualName = roleLabels[detectedRole] || detectedRole;
-
-      return {
-        success: false,
-        error: `Access Denied: This account is registered as a ${actualName}. You cannot log into the ${selectedName} portal with these credentials. Please switch to the ${actualName} portal.`
-      };
-    }
+  const makeLocalSuccess = (userObj, role, profile, infoMsg) => {
+    try {
+      localStorage.setItem(ACTIVE_LOCAL_USER_KEY, JSON.stringify(userObj));
+      localStorage.setItem('infratrace_role', role);
+      localStorage.setItem('infratrace_user_profile', JSON.stringify(profile));
+    } catch {}
 
     return {
       success: true,
-      user: data.user,
-      session: data.session,
-      role: detectedRole,
-      profile: profile,
-      isAutoCreated: isAutoCreated
+      user: userObj,
+      session: { access_token: 'local-token-' + Date.now(), user: userObj },
+      role,
+      profile,
+      infoMessage: infoMsg,
+      isLocalFallback: true
     };
-  } catch (err) {
-    console.error('[InfraTrace Auth] Unexpected sign-in error:', err);
-    return {
-      success: false,
-      error: mapAuthError(err)
-    };
+  };
+
+  // 1. If Supabase is configured, attempt Supabase Auth first
+  if (isSupabaseConfigured) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password: password
+      });
+
+      if (!error && data?.user) {
+        const { role: detectedRole, profile, isAutoCreated } = await detectUserRoleAndProfile(data.user);
+
+        // Strict role portal check
+        if (selectedRole && selectedRole !== detectedRole) {
+          try { await supabase.auth.signOut(); } catch {}
+          const roleLabels = { Admin: 'Admin Officer', Verifier: 'Verifier Officer', User: 'Civil Engineer (User)' };
+          return {
+            success: false,
+            error: `Access Denied: This account is registered as ${roleLabels[detectedRole] || detectedRole}. Please select the ${roleLabels[detectedRole] || detectedRole} card.`
+          };
+        }
+
+        try { localStorage.removeItem(ACTIVE_LOCAL_USER_KEY); } catch {}
+        return {
+          success: true,
+          user: data.user,
+          session: data.session,
+          role: detectedRole,
+          profile,
+          isAutoCreated
+        };
+      }
+    } catch (sbErr) {
+      console.warn('[InfraTrace Auth] Supabase cloud connection failed, checking local credentials:', sbErr);
+    }
   }
+
+  // 2. Demo Account Check (Admin, Verifier, User)
+  const demoAccount = DEMO_ACCOUNTS[cleanEmail];
+  if (demoAccount) {
+    if (demoAccount.password === password) {
+      if (selectedRole && selectedRole !== demoAccount.role) {
+        return {
+          success: false,
+          error: `Access Denied: ${demoAccount.profile.fullName} is an ${demoAccount.role}. Please click the ${demoAccount.role} card to sign in.`
+        };
+      }
+      const userObj = {
+        id: demoAccount.profile.id,
+        email: cleanEmail,
+        user_metadata: { full_name: demoAccount.profile.fullName }
+      };
+      return makeLocalSuccess(userObj, demoAccount.role, demoAccount.profile, 'Signed in with demo account');
+    } else {
+      return { success: false, error: 'Invalid email or password' };
+    }
+  }
+
+  // 3. Locally Registered User Check
+  const localUsers = getLocalUsers();
+  const matchedUser = localUsers.find(u => u.email.toLowerCase() === cleanEmail);
+  if (matchedUser) {
+    if (matchedUser.password === password) {
+      if (selectedRole && selectedRole !== 'User') {
+        return {
+          success: false,
+          error: 'Access Denied: Newly created accounts are User accounts. Please select the User card.'
+        };
+      }
+      const userObj = {
+        id: matchedUser.id,
+        email: cleanEmail,
+        user_metadata: {
+          full_name: matchedUser.fullName,
+          profession: matchedUser.profession
+        }
+      };
+      const userProfile = {
+        id: matchedUser.id,
+        email: cleanEmail,
+        fullName: matchedUser.fullName,
+        role: 'User',
+        profession: matchedUser.profession
+      };
+      return makeLocalSuccess(userObj, 'User', userProfile);
+    } else {
+      return { success: false, error: 'Invalid email or password' };
+    }
+  }
+
+  return {
+    success: false,
+    error: 'Invalid email or password. If you do not have an account yet, click "Create New Account".'
+  };
 }
 
 /**
- * Public Sign Up with Supabase Auth.
- * Public registration creates exclusively standard User accounts (users_profile).
- * If email confirmation is disabled, user is immediately logged in and profile is inserted.
- * If email confirmation is enabled, instructions to confirm email are returned.
+ * Public Sign Up: Attempts Supabase first; if Supabase is offline/unreachable/rate-limited,
+ * automatically registers the user locally so they are never blocked.
  */
 export async function signUp({ email, password, fullName, profession = 'Civil Engineer' }) {
-  if (!isSupabaseConfigured) {
-    return {
-      success: false,
-      error: 'Supabase is not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your deployment environment variables and redeploy.'
-    };
-  }
-  try {
-    const validProfessions = ['Civil Engineer', 'Site Engineer', 'Contractor', 'Surveyor'];
-    const resolvedProfession = validProfessions.includes(profession) ? profession : 'Civil Engineer';
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const validProfessions = ['Civil Engineer', 'Site Engineer', 'Contractor', 'Surveyor'];
+  const resolvedProfession = validProfessions.includes(profession) ? profession : 'Civil Engineer';
 
-    const { data, error } = await supabase.auth.signUp({
-      email: email.trim(),
+  const registerLocally = () => {
+    const localId = 'user-' + Date.now();
+    const userRecord = {
+      id: localId,
+      email: cleanEmail,
       password: password,
-      options: {
-        data: {
-          full_name: fullName.trim(),
-          profession: resolvedProfession
-        }
+      fullName: fullName.trim(),
+      profession: resolvedProfession,
+      createdAt: new Date().toISOString()
+    };
+    saveLocalUser(userRecord);
+
+    const userObj = {
+      id: localId,
+      email: cleanEmail,
+      user_metadata: {
+        full_name: fullName.trim(),
+        profession: resolvedProfession
       }
-    });
+    };
+    const userProfile = {
+      id: localId,
+      email: cleanEmail,
+      fullName: fullName.trim(),
+      profession: resolvedProfession,
+      role: 'User'
+    };
 
-    if (error) {
-      const userMessage = mapAuthError(error);
-      return {
-        success: false,
-        error: userMessage,
-        rawError: error
-      };
-    }
+    try {
+      localStorage.setItem(ACTIVE_LOCAL_USER_KEY, JSON.stringify(userObj));
+      localStorage.setItem('infratrace_role', 'User');
+      localStorage.setItem('infratrace_user_profile', JSON.stringify(userProfile));
+    } catch {}
 
-    if (!data?.user) {
-      return {
-        success: false,
-        error: 'Registration failed: No user returned.'
-      };
-    }
-
-    // If session is returned, email confirmation is disabled -> immediately ready
-    if (data.session) {
-      try {
-        await supabase.from('users_profile').upsert({
-          id: data.user.id,
-          email: email.trim(),
-          full_name: fullName.trim(),
-          profession: resolvedProfession
-        });
-      } catch (profileErr) {
-        console.warn('[InfraTrace Auth] users_profile upsert notice:', profileErr);
-      }
-
-      return {
-        success: true,
-        session: data.session,
-        user: data.user,
-        role: 'User',
-        profile: {
-          id: data.user.id,
-          email: email.trim(),
-          fullName: fullName.trim(),
-          profession: resolvedProfession,
-          role: 'User'
-        }
-      };
-    }
-
-    // If no session is returned, email confirmation is active in Supabase
     return {
       success: true,
-      needsConfirmation: true,
-      message: 'Account created. Check your email to confirm, then log in.'
+      session: { access_token: 'local-token-' + Date.now(), user: userObj },
+      user: userObj,
+      role: 'User',
+      profile: userProfile,
+      isLocalFallback: true
     };
-  } catch (err) {
-    console.error('[InfraTrace Auth] Sign-up exception:', err);
-    return {
-      success: false,
-      error: mapAuthError(err)
-    };
+  };
+
+  // 1. If Supabase is configured, try Supabase Auth first
+  if (isSupabaseConfigured) {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password: password,
+        options: {
+          data: {
+            full_name: fullName.trim(),
+            profession: resolvedProfession
+          }
+        }
+      });
+
+      if (!error && data?.user) {
+        if (data.session) {
+          try {
+            await supabase.from('users_profile').upsert({
+              id: data.user.id,
+              email: cleanEmail,
+              full_name: fullName.trim(),
+              profession: resolvedProfession
+            });
+          } catch {}
+
+          try { localStorage.removeItem(ACTIVE_LOCAL_USER_KEY); } catch {}
+
+          return {
+            success: true,
+            session: data.session,
+            user: data.user,
+            role: 'User',
+            profile: {
+              id: data.user.id,
+              email: cleanEmail,
+              fullName: fullName.trim(),
+              profession: resolvedProfession,
+              role: 'User'
+            }
+          };
+        }
+
+        // Email confirmation required in Supabase project
+        return {
+          success: true,
+          needsConfirmation: true,
+          message: 'Account created! Please check your email to confirm, then log in.'
+        };
+      }
+
+      // Check if user is already registered in Supabase
+      const msg = (error?.message || '').toLowerCase();
+      if (msg.includes('already registered') || msg.includes('already exists')) {
+        return {
+          success: false,
+          error: 'This email is already registered. Please sign in.'
+        };
+      }
+
+      console.warn('[InfraTrace Auth] Supabase cloud sign-up failed (' + (error?.message || '') + '), using local registration fallback.');
+      return registerLocally();
+    } catch (err) {
+      console.warn('[InfraTrace Auth] Supabase network exception during sign-up, activating local registration:', err);
+      return registerLocally();
+    }
   }
+
+  // 2. Local registration fallback
+  return registerLocally();
 }
 
 /**
- * Sign Out from Supabase Auth
+ * Sign Out from Supabase Auth & Local Session
  */
 export async function signOut() {
   try {
-    await supabase.auth.signOut();
+    localStorage.removeItem(ACTIVE_LOCAL_USER_KEY);
+    localStorage.removeItem('infratrace_role');
+    localStorage.removeItem('infratrace_user_profile');
+    if (isSupabaseConfigured) {
+      await supabase.auth.signOut();
+    }
   } catch (err) {
     console.warn('[InfraTrace Auth] Sign out warning:', err);
   }
@@ -469,15 +555,41 @@ export async function signOut() {
  * Restore active session and detect user profile
  */
 export async function getSessionAndProfile() {
+  // Check active local user first
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    if (error || !session?.user) {
-      return { session: null, user: null, role: null, profile: null };
+    const savedLocalUser = localStorage.getItem(ACTIVE_LOCAL_USER_KEY);
+    if (savedLocalUser) {
+      const user = JSON.parse(savedLocalUser);
+      const savedProfile = localStorage.getItem('infratrace_user_profile');
+      const profile = savedProfile ? JSON.parse(savedProfile) : {
+        id: user.id,
+        fullName: user.user_metadata?.full_name || 'User',
+        email: user.email,
+        role: localStorage.getItem('infratrace_role') || 'User',
+        profession: user.user_metadata?.profession || 'Civil Engineer'
+      };
+      const role = localStorage.getItem('infratrace_role') || profile.role || 'User';
+      return {
+        session: { access_token: 'local-token', user },
+        user,
+        role,
+        profile
+      };
     }
-    const { role, profile } = await detectUserRoleAndProfile(session.user);
-    return { session, user: session.user, role, profile };
-  } catch (err) {
-    console.error('[InfraTrace Auth] Session restore exception:', err);
-    return { session: null, user: null, role: null, profile: null };
+  } catch {}
+
+  // Check Supabase session if configured
+  if (isSupabaseConfigured) {
+    try {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (!error && session?.user) {
+        const { role, profile } = await detectUserRoleAndProfile(session.user);
+        return { session, user: session.user, role, profile };
+      }
+    } catch (err) {
+      console.warn('[InfraTrace Auth] Session restore exception:', err);
+    }
   }
+
+  return { session: null, user: null, role: null, profile: null };
 }

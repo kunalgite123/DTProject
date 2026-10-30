@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
 import {
   signIn as authSignIn,
@@ -242,6 +242,7 @@ export const UtilityProvider = ({ children }) => {
 
   // Fetch utilities from Supabase
   const fetchSupabaseUtilities = async () => {
+    if (!isSupabaseConfigured) return;
     try {
       const { data, error } = await supabase.from('utilities').select('*');
       if (data && data.length > 0 && !error) {
@@ -303,16 +304,23 @@ export const UtilityProvider = ({ children }) => {
 
     restoreSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        setCurrentUser(session.user);
-        const { role, profile } = await detectUserRoleAndProfile(session.user);
-        if (role) setCurrentRole(role);
-        if (profile) setUserProfile(profile);
-      } else {
-        setCurrentUser(null);
-      }
-    });
+    let subscription = null;
+    if (isSupabaseConfigured) {
+      const authRes = supabase.auth.onAuthStateChange(async (_event, session) => {
+        if (session?.user) {
+          setCurrentUser(session.user);
+          const { role, profile } = await detectUserRoleAndProfile(session.user);
+          if (role) setCurrentRole(role);
+          if (profile) setUserProfile(profile);
+        } else {
+          const localUser = localStorage.getItem('infratrace_local_user');
+          if (!localUser) {
+            setCurrentUser(null);
+          }
+        }
+      });
+      subscription = authRes?.data?.subscription;
+    }
 
     return () => {
       isMounted = false;
@@ -333,8 +341,8 @@ export const UtilityProvider = ({ children }) => {
     setLoading(true);
     try {
       const res = await authSignIn({ email, password, selectedRole: explicitRole });
-      if (res.success && res.user) {
-        setCurrentUser(res.user);
+      if (res.success && (res.user || res.profile)) {
+        if (res.user) setCurrentUser(res.user);
         if (res.role) setCurrentRole(res.role);
         if (res.profile) setUserProfile(res.profile);
         return {
@@ -354,7 +362,7 @@ export const UtilityProvider = ({ children }) => {
       console.error('[InfraTrace] Sign in exception:', err);
       return {
         success: false,
-        error: 'Network error, try again'
+        error: err?.message || 'Authentication error. Please try again.'
       };
     } finally {
       setLoading(false);
@@ -367,8 +375,8 @@ export const UtilityProvider = ({ children }) => {
     try {
       const res = await authSignUp({ email, password, fullName, profession });
       if (res.success) {
-        if (res.session && res.user) {
-          setCurrentUser(res.user);
+        if (res.user || res.profile) {
+          if (res.user) setCurrentUser(res.user);
           setCurrentRole('User');
           if (res.profile) setUserProfile(res.profile);
           return { success: true, role: 'User', user: res.user, profile: res.profile };
@@ -381,7 +389,7 @@ export const UtilityProvider = ({ children }) => {
       }
     } catch (err) {
       console.error('[InfraTrace] Sign up exception:', err);
-      return { success: false, error: 'Network error or registration failure' };
+      return { success: false, error: err?.message || 'Registration failed' };
     } finally {
       setLoading(false);
     }
@@ -391,8 +399,11 @@ export const UtilityProvider = ({ children }) => {
   const signOutSupabase = async () => {
     await authSignOut();
     setCurrentUser(null);
-    localStorage.removeItem('infratrace_role');
-    localStorage.removeItem('infratrace_user_profile');
+    try {
+      localStorage.removeItem('infratrace_role');
+      localStorage.removeItem('infratrace_user_profile');
+      localStorage.removeItem('infratrace_local_user');
+    } catch {}
     setCurrentRoleState('User');
     setUserProfileState({
       fullName: 'Guest',
@@ -412,6 +423,7 @@ export const UtilityProvider = ({ children }) => {
 
     setUtilities(prev => [formatted, ...prev]);
 
+    if (!isSupabaseConfigured) return formatted;
     // Async persist to Supabase if table exists
     try {
       const typeLower = (newUtility.type || 'water').toLowerCase();
@@ -472,6 +484,7 @@ export const UtilityProvider = ({ children }) => {
       return item;
     }));
 
+    if (!isSupabaseConfigured) return;
     // Async persist update to Supabase
     try {
       const updatePayload = {
